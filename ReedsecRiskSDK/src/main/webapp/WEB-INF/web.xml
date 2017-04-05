@@ -1,0 +1,104 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+  <!--不加这句话的话项目启动默认首页为index，删除index.jsp也行-->
+  <!--springmvc是不需要ContextLoaderListener来加载管理bean的，DispatcherServlet它有自己的容器，主要用于加载除控制器层的bean,DispatcherServlet属于子容器。
+    cxf需要ContextLoaderListener，cxf需要ContextLoaderListener是spring管理bean的父容器，一般用于加载非控制器层的bean。
+    子容器可以访问父容器中的bean，而父容器不能访问子容器。
+    可以把基本web请求的controller等这些bean放到spring-web.xml中，让DispatcherServlet去加载管理spring-web.xml。
+    把webservice相关配置到另外一个xml文件中,比如spring-webservice.xml,
+    让ContextLoaderListener去加载管理spring-webservice.xml和其他spring文件（）spring-mysql.xml,spring-jpa.xml等），
+    这样，就互不影响了。
+  -->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+ <!-- <context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>classpath:/log4j.properties</param-value>
+  </context-param>-->
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      classpath:/spring-webservice.xml
+    </param-value>
+  </context-param>
+
+  <servlet>
+    <servlet-name>springServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:/spring-web.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <!--日志初始化配置-->
+    <!-- <context-param>
+       <param-name>webAppRootKey</param-name>
+       <param-value>reedpay_java_master.root</param-value>
+     </context-param>-->
+
+<!--  <context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>classpath:/log4j.properties</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>log4jRefreshInterval</param-name>
+    <param-value>3000</param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>
+      org.springframework.web.util.Log4jConfigListener
+    </listener-class>
+  </listener>-->
+
+  <filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!--Spring MVC是通过DispatcherServlet来加载Spring配置文件的，因此不需要在web.xml中配置ContextLoaderListener。
+  但是CXF却需要通过ContextLoaderListener来加载Spring。-->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <!-- 配置CXF框架的核心Servlet  -->
+  <servlet>
+    <servlet-name>CXFServlet</servlet-name>
+    <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CXFServlet</servlet-name>
+    <url-pattern>/server/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>

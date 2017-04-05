@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="reedpay_java_master:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="reedpay_java_master.war">
+      <element id="artifact" artifact-name="reedpay_java_master:war exploded" />
+    </root>
+  </artifact>
+</component>

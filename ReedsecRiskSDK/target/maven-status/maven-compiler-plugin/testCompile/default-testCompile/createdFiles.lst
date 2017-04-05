@@ -1,0 +1,8 @@
+Client_register_notify.class
+Client_sms_verify.class
+Client_withdraw_verify.class
+Client_coupon_verify.class
+Test.class
+Client_loan_verify.class
+Client_login_notify.class
+Client_store_notify.class
